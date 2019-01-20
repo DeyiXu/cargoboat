@@ -20,7 +20,7 @@ func Get(ctx *ngin.WebAPIContext) {
 	if store.DB.Find(apps).RecordNotFound() {
 		ctx.ResultError(errors.ErrApplicationNotFound)
 	} else {
-		ctx.JSON(200, gin.H{
+		ctx.JSON(200, map[string]interface{}{
 			"data":  apps,
 			"total": len(apps),
 		})
@@ -54,7 +54,7 @@ func GetConfigs(w *ngin.WebAPIContext) {
 	if store.DB.Where(query, values...).Find(&configs).RecordNotFound() {
 		w.ResultError(errors.ErrApplicationNotFound)
 	} else {
-		w.JSON(200, gin.Result{
+		w.JSON(200, map[string]interface{}{
 			"data":  configs,
 			"total": len(configs),
 		})
