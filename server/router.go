@@ -7,8 +7,8 @@ import (
 	"github.com/cargoboat/cargoboat/controller/application"
 	"github.com/cargoboat/cargoboat/controller/auth"
 	"github.com/cargoboat/cargoboat/controller/config"
-	wgin "github.com/dkeng/pkg/context/gin"
 	"github.com/gin-gonic/gin"
+	ngin "github.com/nilorg/pkg/gin"
 )
 
 var (
@@ -42,15 +42,15 @@ func setRouter(handler *gin.Engine) {
 		// auth.GET("/hello", helloHandler)
 		auth.GET("/refresh_token", authMiddleware.RefreshHandler)
 
-		auth.GET("/applications", wgin.WrapControllerFunction(application.Get))
-		auth.GET("/applications/:id", wgin.WrapControllerFunction(application.GetOne))
-		auth.GET("/applications/:id/configs", wgin.WrapControllerFunction(application.GetConfigs))
-		auth.POST("/applications", wgin.WrapControllerFunction(application.Post))
-		auth.DELETE("/applications/:id", wgin.WrapControllerFunction(application.Delete))
+		auth.GET("/applications", ngin.WebAPIControllerFunc(application.Get))
+		auth.GET("/applications/:id", ngin.WebAPIControllerFunc(application.GetOne))
+		auth.GET("/applications/:id/configs", ngin.WebAPIControllerFunc(application.GetConfigs))
+		auth.POST("/applications", ngin.WebAPIControllerFunc(application.Post))
+		auth.DELETE("/applications/:id", ngin.WebAPIControllerFunc(application.Delete))
 
-		auth.GET("/configs", wgin.WrapControllerFunction(config.Get))
-		auth.POST("/configs", wgin.WrapControllerFunction(config.Post))
-		auth.PUT("/configs/:id", wgin.WrapControllerFunction(config.Put))
-		auth.DELETE("/configs/:id", wgin.WrapControllerFunction(config.Delete))
+		auth.GET("/configs", ngin.WebAPIControllerFunc(config.Get))
+		auth.POST("/configs", ngin.WebAPIControllerFunc(config.Post))
+		auth.PUT("/configs/:id", ngin.WebAPIControllerFunc(config.Put))
+		auth.DELETE("/configs/:id", ngin.WebAPIControllerFunc(config.Delete))
 	}
 }

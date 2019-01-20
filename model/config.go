@@ -5,7 +5,7 @@ type Config struct {
 	Name  string `json:"name" gorm:"not null;unique_index"`
 	Value string `json:"value" gorm:"not null"`
 	// 模式
-	Mode byte `json:"mode" gorm:"not null;type:char"`
+	Mode string `json:"mode" gorm:"not null"`
 	// 版本
 	Version float64 `json:"version" gorm:"not null"`
 	// 应用ID

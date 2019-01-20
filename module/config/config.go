@@ -4,8 +4,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/dkeng/pkg/logger"
 	"github.com/gin-gonic/gin"
+	"github.com/nilorg/pkg/logger"
 	"github.com/spf13/viper"
 )
 
@@ -26,6 +26,7 @@ func initConfigFile() {
 		os.Exit(-1)
 	}
 }
+
 func initLog() {
 	// 日志初始化
 	logger.Init()

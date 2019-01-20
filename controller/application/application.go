@@ -6,21 +6,21 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/dkeng/pkg/convert"
+	"github.com/nilorg/sdk/convert"
 
 	"github.com/cargoboat/cargoboat/errors"
 	"github.com/cargoboat/cargoboat/model"
 	"github.com/cargoboat/cargoboat/module/store"
-	"github.com/dkeng/pkg/context/gin"
+	ngin "github.com/nilorg/pkg/gin"
 )
 
 // Get 获取
-func Get(w *gin.WrapContext) {
+func Get(ctx *ngin.WebAPIContext) {
 	var apps []model.Application
 	if store.DB.Find(apps).RecordNotFound() {
-		w.ErrorJSON(errors.ErrApplicationNotFound)
+		ctx.ResultError(errors.ErrApplicationNotFound)
 	} else {
-		w.OKJSON(gin.Result{
+		ctx.JSON(200, gin.H{
 			"data":  apps,
 			"total": len(apps),
 		})
@@ -28,17 +28,17 @@ func Get(w *gin.WrapContext) {
 }
 
 // GetOne 获取一个
-func GetOne(w *gin.WrapContext) {
+func GetOne(w *ngin.WebAPIContext) {
 	var config model.Config
 	if store.DB.First(&config, w.Param("id")).RecordNotFound() {
 		w.Status(http.StatusNotFound)
 	} else {
-		w.OKJSON(config)
+		w.JSON(200, config)
 	}
 }
 
 // GetConfigs 获取配置文件
-func GetConfigs(w *gin.WrapContext) {
+func GetConfigs(w *ngin.WebAPIContext) {
 	appID := w.Param("id")
 	name, nameExist := w.GetQuery("name")
 	query := "app_id = ?"
@@ -52,9 +52,9 @@ func GetConfigs(w *gin.WrapContext) {
 
 	var configs []model.Config
 	if store.DB.Where(query, values...).Find(&configs).RecordNotFound() {
-		w.ErrorJSON(errors.ErrApplicationNotFound)
+		w.ResultError(errors.ErrApplicationNotFound)
 	} else {
-		w.OKJSON(gin.Result{
+		w.JSON(200, gin.Result{
 			"data":  configs,
 			"total": len(configs),
 		})
@@ -62,23 +62,23 @@ func GetConfigs(w *gin.WrapContext) {
 }
 
 // Post 创建
-func Post(w *gin.WrapContext) {
+func Post(w *ngin.WebAPIContext) {
 	app := new(model.Application)
 	h := md5.New()
 	h.Write([]byte(convert.ToString(time.Now().Unix())))
 	app.AppSecret = hex.EncodeToString(h.Sum(nil))
 
 	if err := store.DB.Create(app).Error; err != nil {
-		w.ErrorJSON(errors.ErrApplicationCreateFailure)
+		w.ResultError(errors.ErrApplicationCreateFailure)
 	} else {
-		w.OKJSON(app)
+		w.JSON(200, app)
 	}
 }
 
 // Delete 删除
-func Delete(w *gin.WrapContext) {
+func Delete(w *ngin.WebAPIContext) {
 	if err := store.DB.Where("id = ?", "").Delete(&model.Application{}).Error; err != nil {
-		w.ErrorJSON(errors.ErrApplicationDelFailure)
+		w.ResultError(errors.ErrApplicationDelFailure)
 	} else {
 		w.Status(http.StatusNoContent)
 	}

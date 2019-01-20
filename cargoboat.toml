@@ -3,6 +3,7 @@ addr = "0.0.0.0:5000"
 mode = "debug"
 username = "cargoboat"
 password = "cargoboat"
+snowflake_node = 1 #雪花ID Node节点
 [postgres]
 address = "host=127.0.0.1 port=5432 user=postgres password=postgres dbname=cargoboat sslmode=disable"
 log = true

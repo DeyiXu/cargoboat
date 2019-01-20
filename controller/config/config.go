@@ -5,11 +5,11 @@ import (
 
 	"github.com/cargoboat/cargoboat/model"
 	"github.com/cargoboat/cargoboat/module/store"
-	"github.com/dkeng/pkg/context/gin"
+	ngin "github.com/nilorg/pkg/gin"
 )
 
 // Get 获取
-func Get(w *gin.WrapContext) {
+func Get(ctx *ngin.WebAPIContext) {
 
 }
 
@@ -17,7 +17,7 @@ type confModel struct {
 	Name  string `json:"name" form:"name" binding:"required"`
 	Value string `json:"value" form:"value" binding:"required"`
 	// 模式
-	Mode byte `json:"mode" form:"mode" binding:"required"`
+	Mode string `json:"mode" form:"mode" binding:"required"`
 	// 版本
 	Version float64 `json:"version" form:"version" binding:"required"`
 	// 应用ID
@@ -37,9 +37,11 @@ func (c *confModel) Validation(obj interface{}) error {
 }
 
 // Post 新增
-func Post(w *gin.WrapContext) {
+func Post(w *ngin.WebAPIContext) {
 	cm := new(confModel)
-	if !w.BindValidation(cm,nil) {
+
+	if err := w.Bind(&cm); err != nil {
+		w.ResultError(err)
 		return
 	}
 
@@ -50,19 +52,19 @@ func Post(w *gin.WrapContext) {
 	conf.Value = cm.Value
 	conf.Version = cm.Version
 	if err := store.DB.Create(conf).Error; err != nil {
-		w.ErrorJSON(errConfigAdd)
+		w.ResultError(errConfigAdd)
 	} else {
 		w.Status(http.StatusCreated)
 	}
 }
 
 // Delete 删除
-func Delete(w *gin.WrapContext) {
+func Delete(w *ngin.WebAPIContext) {
 	store.DB.Where("id = ?", w.Param("id")).Delete(&model.Config{})
 }
 
 // Put 修改
-func Put(w *gin.WrapContext) {
+func Put(w *ngin.WebAPIContext) {
 	conf := new(model.Config)
 	store.DB.Update(conf)
 }

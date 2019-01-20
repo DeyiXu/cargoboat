@@ -4,9 +4,12 @@ import (
 	"log"
 	"os"
 	"os/signal"
+
 	// 加载配置文件
 	"github.com/cargoboat/cargoboat/model"
 	_ "github.com/cargoboat/cargoboat/module/config"
+	_ "github.com/cargoboat/cargoboat/module/errors"
+
 	// 初始化存储
 	"github.com/cargoboat/cargoboat/module/store"
 	"github.com/cargoboat/cargoboat/server"
