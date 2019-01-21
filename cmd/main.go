@@ -18,7 +18,7 @@ import (
 func init() {
 	store.Start()
 	model.AutoMigrate()
-	server.Start()
+	server.Startup()
 }
 func main() {
 	quit := make(chan os.Signal)

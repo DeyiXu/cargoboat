@@ -12,6 +12,9 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/erikstmartin/go-testdb v0.0.0-20160219214506-8d10e4a1bae5 // indirect
 	github.com/evalphobia/logrus_sentry v0.8.0 // indirect
+	github.com/gin-contrib/gzip v0.0.0-20190101123152-0eb78e93402e
+	github.com/gin-contrib/multitemplate v0.0.0-20190118042248-542ef922db4b
+	github.com/gin-contrib/sessions v0.0.0-20190101140330-dc5246754963
 	github.com/gin-gonic/gin v1.3.0
 	github.com/go-sql-driver/mysql v1.4.1 // indirect
 	github.com/gofrs/uuid v3.1.0+incompatible // indirect

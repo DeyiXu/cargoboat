@@ -30,9 +30,9 @@ var (
 )
 
 // setRouter 设置路由
-func setRouter(handler *gin.Engine) {
+func setRouter(handler *gin.RouterGroup) {
 	handler.GET("/", func(c *gin.Context) {
-		c.String(200, "welcome cogo server")
+		c.String(200, "welcome cargoboat server")
 	})
 
 	handler.POST("/login", authMiddleware.LoginHandler)

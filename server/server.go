@@ -15,9 +15,12 @@ var (
 )
 
 // Start 启动
-func Start() {
+func Startup() {
 	rest := gin.Default()
-	setRouter(rest)
+	setRouter(rest.Group("/demo"))
+	setWeb(rest)
+	setWebRouter(rest)
+	setAPIRouter(rest.Group("/api"))
 
 	httpServer = &http.Server{
 		Addr:    viper.GetString("system.addr"),
