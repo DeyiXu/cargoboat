@@ -15,9 +15,9 @@ import (
 
 	"github.com/nilorg/pkg/logger"
 
+	applicationWebController "github.com/cargoboat/cargoboat/controller/web/application"
 	authWebController "github.com/cargoboat/cargoboat/controller/web/auth"
 	errorWebController "github.com/cargoboat/cargoboat/controller/web/error"
-
 	homeWebController "github.com/cargoboat/cargoboat/controller/web/home"
 
 	"github.com/gin-gonic/gin"
@@ -116,6 +116,8 @@ func setWebRouter(router *gin.Engine) {
 	{
 		authRouter.GET("/", ngin.WebControllerFunc(homeWebController.Index, "index"))
 		authRouter.GET("/index.html", ngin.WebControllerFunc(homeWebController.Index, "index"))
+
+		authRouter.GET("/application/list", ngin.WebControllerFunc(applicationWebController.List, "applicationList"))
 
 		authRouter.GET("/logout.html", ngin.WebAPIControllerFunc(authWebController.Logout))
 	}

@@ -26,11 +26,24 @@
             <span>首页</span>
         </a>
     </li>
-    <li>
-        <a href="/test">
-            <i class="fa fa-link"></i>
-            <span>测试页面</span>
-        </a>
-    </li>
+    {{range .menus}}
+        <li class="{{if .MenuItems}}treeview{{end}}">
+            <a href="{{.URL}}"><i class="{{.Icon}}"></i> <span>{{.Name}}</span>
+                {{if .MenuItems}}
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                {{end}}
+            </a>
+            {{if .MenuItems}}
+                <ul class="treeview-menu">
+                    {{range .MenuItems}}
+                        <li><a href="{{.URL}}"><i class="{{.Icon}}"></i>{{.Name}}</a>
+                        </li>
+                    {{end}}
+                </ul>
+            {{end}}
+        </li>
+    {{end}}
 </ul>
 {{ end }}
