@@ -12,23 +12,21 @@
             'autoWidth': false,
             'ajax': "/api/application/list",
             "columns": [
-                { "data": "a" },
-                { "data": "b" },
-                { "data": "c" },
-                { "data": "d" },
-                { "data": "e" },
+                { "data": "id" },
+                { "data": "name" },
+                { "data": "created_at" },
+                { "data": "mode_count" },
+                { "data": "version" },
             ],
             "columnDefs": [
                 {
                     "aTargets": [5],
                     "mRender": function (data, type, full) {
                         console.log(data, type, full);
-                        return `<a href="#myModal-edit" data-toggle="modal" onclick="preUpdate(` + data + `)">
-                            <i class="fa fa-lg-2 fa-pencil"></i>
-                        </a>
-                        <a href="javascript:void(0)" data-toggle="modal" class="smart-mod-eg1" onclick="delPool(` + data + `,event)">
-                            <i class="fa fa-lg-2 fa-trash-o"> </i>
-                        </a>`
+                        return `<a href="javascript:void(0)" data-app-id="${full.id}"><i class="fa fa-edit"></i></a>
+<a href="javascript:void(0)" data-app-id="${full.id}"><i class="fa fa-bolt"></i></a>
+<a href="javascript:void(0)" data-app-id="${full.id}"><i class="fa fa-tags"></i></a>
+<a href="javascript:void(0)" data-app-id="${full.id}"><i class="fa fa-trash-o"> </i></a>`
                     }
                 },
             ],

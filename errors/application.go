@@ -10,4 +10,6 @@ var (
 	ErrApplicationCreateFailure = errors.New("创建应用失败")
 	// ErrApplicationDelFailure 删除应用失败
 	ErrApplicationDelFailure = errors.New("删除应用失败")
+	// ErrApplicationPaged 查询应用程序列表错误
+	ErrApplicationPaged = errors.New("查询应用程序列表错误")
 )

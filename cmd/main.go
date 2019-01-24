@@ -5,6 +5,8 @@ import (
 	"os"
 	"os/signal"
 
+	"github.com/cargoboat/cargoboat/dal"
+
 	// 加载配置文件
 	"github.com/cargoboat/cargoboat/model"
 	_ "github.com/cargoboat/cargoboat/module/config"
@@ -17,6 +19,7 @@ import (
 
 func init() {
 	store.Start()
+	dal.Init()
 	model.AutoMigrate()
 	server.Startup()
 }

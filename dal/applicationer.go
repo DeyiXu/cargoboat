@@ -4,7 +4,7 @@ import "github.com/cargoboat/cargoboat/model"
 
 // Applicationer ...
 type Applicationer interface {
-	// GetPaged 获取翻页数据
+	// QueryPage 获取翻页数据
 	QueryPage(pageNum, pageSize int, appName string) (data []*model.Application, total int64, err error)
 	// GetAll ...
 	GetAll() (apps []*model.Application)

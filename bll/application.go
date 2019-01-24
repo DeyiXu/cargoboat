@@ -1,6 +1,8 @@
 package bll
 
 import (
+	"time"
+
 	"github.com/cargoboat/cargoboat/dal"
 	"github.com/cargoboat/cargoboat/model"
 	cerrors "github.com/cargoboat/cargoboat/module/errors"
@@ -53,5 +55,40 @@ func (a *ApplicationBll) Add(name string) (appID int64, err error) {
 		return
 	}
 	appID = app.ID
+	return
+}
+
+// ApplicationPagedItem 应用
+type ApplicationPagedItem struct {
+	ID        int64      `json:"id"`
+	Name      string     `json:"name"`
+	AppSecret string     `json:"secret"`
+	Version   string     `json:"version"`
+	ModeCount int        `json:"mode_count"`
+	CreatedAt time.Time  `json:"created_at"`
+	UpdatedAt time.Time  `json:"updated_at"`
+	DeletedAt *time.Time `json:"deleted_at"`
+}
+
+// QueryPage 获取翻页数据
+func (a *ApplicationBll) QueryPage(pageNum, pageSize int, appName string) (data []*ApplicationPagedItem, total int64, err error) {
+	var apps []*model.Application
+	apps, total, err = dal.Application.QueryPage(pageNum, pageSize, appName)
+	if err != nil {
+		err = cerrors.GetBusinessError(2007)
+		return
+	}
+
+	for _, app := range apps {
+		data = append(data, &ApplicationPagedItem{
+			Name:      app.Name,
+			AppSecret: app.AppSecret,
+			ID:        app.ID,
+			CreatedAt: app.CreatedAt,
+			UpdatedAt: app.UpdatedAt,
+			DeletedAt: app.DeletedAt,
+		})
+	}
+
 	return
 }

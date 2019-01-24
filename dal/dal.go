@@ -1,8 +1,15 @@
 package dal
 
-import "github.com/cargoboat/cargoboat/module/store"
+import (
+	"github.com/cargoboat/cargoboat/module/store"
+)
 
 var (
-	Application Applicationer = NewApplicationDal(store.DataBase)
-	Config      Configer      = NewConfigDal(store.DataBase)
+	Application Applicationer
+	Config      Configer
 )
+
+func Init() {
+	Application = NewApplicationDal(store.DataBase)
+	Config = NewConfigDal(store.DataBase)
+}

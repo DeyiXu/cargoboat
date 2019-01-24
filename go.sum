@@ -113,6 +113,12 @@ github.com/nilorg/pkg v0.0.0-20190124014259-4303ee5ebd21 h1:8ckvB3III73IpDQELmAv
 github.com/nilorg/pkg v0.0.0-20190124014259-4303ee5ebd21/go.mod h1:RNhEKvtANw4vtz2y0wwklD6prlmxouQPMT4yoLT+XyU=
 github.com/nilorg/pkg v0.0.0-20190124035039-9f5477cbc5f9 h1:sGTByG0Hh+GKuKQUdWE4czr/MSPguZLaFEMuB1tAE3o=
 github.com/nilorg/pkg v0.0.0-20190124035039-9f5477cbc5f9/go.mod h1:RNhEKvtANw4vtz2y0wwklD6prlmxouQPMT4yoLT+XyU=
+github.com/nilorg/pkg v0.0.0-20190124091114-a520e37c8250 h1:YB91wBlOatZREC//Jfp3punjKE521uA9vBXWEYAWqhQ=
+github.com/nilorg/pkg v0.0.0-20190124091114-a520e37c8250/go.mod h1:RNhEKvtANw4vtz2y0wwklD6prlmxouQPMT4yoLT+XyU=
+github.com/nilorg/pkg v0.0.0-20190124091949-92d6a51302fa h1:wounms6iXYNyCwQmblvKYPuD8AU41ZkQQp68HjPiTOs=
+github.com/nilorg/pkg v0.0.0-20190124091949-92d6a51302fa/go.mod h1:RNhEKvtANw4vtz2y0wwklD6prlmxouQPMT4yoLT+XyU=
+github.com/nilorg/pkg v0.0.0-20190124100809-00a626d01c23 h1:QU+1nsaQx04fJYki7IekCWdpDfvx5hABOray9jlkri4=
+github.com/nilorg/pkg v0.0.0-20190124100809-00a626d01c23/go.mod h1:RNhEKvtANw4vtz2y0wwklD6prlmxouQPMT4yoLT+XyU=
 github.com/nilorg/sdk v0.0.0-20190107091411-80f777c24347/go.mod h1:3ucEfFqjxRb1q9t38i3arReUBkAOjASdgmRpOz4EBKA=
 github.com/nilorg/sdk v0.0.0-20190116130924-5cba00a81130 h1:ZeJEoXEVjl41k4ytiQYE646mkTj3OHS0KFwUwD/msNE=
 github.com/nilorg/sdk v0.0.0-20190116130924-5cba00a81130/go.mod h1:3ucEfFqjxRb1q9t38i3arReUBkAOjASdgmRpOz4EBKA=

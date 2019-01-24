@@ -23,7 +23,7 @@ require (
 	github.com/labstack/gommon v0.2.8 // indirect
 	github.com/mattn/go-colorable v0.0.9 // indirect
 	github.com/mattn/go-sqlite3 v1.10.0 // indirect
-	github.com/nilorg/pkg v0.0.0-20190124035039-9f5477cbc5f9
+	github.com/nilorg/pkg v0.0.0-20190124100809-00a626d01c23
 	github.com/nilorg/sdk v0.0.0-20190116130924-5cba00a81130
 	github.com/pkg/errors v0.8.1
 	github.com/sirupsen/logrus v1.3.0 // indirect
