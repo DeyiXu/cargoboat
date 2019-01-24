@@ -1,5 +1,8 @@
 package model
 
+// ApplicationTableName ...
+const ApplicationTableName = "applications"
+
 // Application 应用
 type Application struct {
 	Name      string `json:"name"`

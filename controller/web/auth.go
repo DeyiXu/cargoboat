@@ -1,15 +1,45 @@
-package auth
+package web
 
 import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	ngin "github.com/nilorg/pkg/gin"
+	"github.com/nilorg/pkg/gin/route"
 	"github.com/nilorg/pkg/logger"
 )
 
+// AuthController 授权控制器
+type AuthController struct {
+}
+
+// NewAuthController ...
+func NewAuthController() *AuthController {
+	return &AuthController{}
+}
+
+// Route ... 路由
+func (auth *AuthController) Route() []route.Route {
+	return []route.Route{
+		{
+			Name:         "退出登录",
+			Method:       http.MethodGet,
+			RelativePath: "/logout.html",
+			Auth:         true,
+			HandlerFunc:  ngin.WebAPIControllerFunc(auth.Logout),
+		},
+		{
+			Name:         "退出登录",
+			Method:       http.MethodGet,
+			RelativePath: "/login.html",
+			Auth:         false,
+			HandlerFunc:  ngin.WebControllerFunc(auth.GetLogin, "login"),
+		},
+	}
+}
+
 // GetLogin ...
-func GetLogin(ctx *ngin.WebContext) {
+func (*AuthController) GetLogin(ctx *ngin.WebContext) {
 	redirectURL := ctx.Query("redirect_url")
 	logger.Debugf("GetLogin redirectURL:%s", redirectURL)
 	ctx.RenderSinglePage(gin.H{
@@ -19,7 +49,7 @@ func GetLogin(ctx *ngin.WebContext) {
 }
 
 // Logout ...
-func Logout(ctx *ngin.WebAPIContext) {
+func (*AuthController) Logout(ctx *ngin.WebAPIContext) {
 	ctx.DelCurrentAccount()
 	ctx.Redirect(http.StatusSeeOther, "/login.html")
 }
@@ -40,7 +70,7 @@ type MenuItem struct {
 }
 
 // GetMenuData 获取菜单数据
-func GetMenuData(value interface{}) gin.H {
+func (*AuthController) GetMenuData(value interface{}) gin.H {
 	logger.Debugln("getMenuData...")
 	roots := make([]*MenuRoot, 0)
 	roots = append(roots,
@@ -70,7 +100,7 @@ func GetMenuData(value interface{}) gin.H {
 }
 
 // GetNavigationData 获取导航数据
-func GetNavigationData(value interface{}) gin.H {
+func (*AuthController) GetNavigationData(value interface{}) gin.H {
 	logger.Debugln("GetNavigationData...")
 	return gin.H{
 		"account": value,

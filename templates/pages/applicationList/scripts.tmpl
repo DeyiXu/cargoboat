@@ -1,7 +1,48 @@
 {{ define "scripts"}}
 <script type="text/javascript">
     window.PageComplete = function () {
-        console.log("PageComplete index....");
+        console.info("PageComplete index....");
+        $('#applicationTable').DataTable({
+            'serverSide': true,
+            'paging': true,
+            'lengthChange': false,
+            'searching': false,
+            'ordering': true,
+            'info': true,
+            'autoWidth': false,
+            'ajax': "/api/application/list",
+            "columns": [
+                { "data": "a" },
+                { "data": "b" },
+                { "data": "c" },
+                { "data": "d" },
+                { "data": "e" },
+            ],
+            "columnDefs": [
+                {
+                    "aTargets": [5],
+                    "mRender": function (data, type, full) {
+                        console.log(data, type, full);
+                        return `<a href="#myModal-edit" data-toggle="modal" onclick="preUpdate(` + data + `)">
+                            <i class="fa fa-lg-2 fa-pencil"></i>
+                        </a>
+                        <a href="javascript:void(0)" data-toggle="modal" class="smart-mod-eg1" onclick="delPool(` + data + `,event)">
+                            <i class="fa fa-lg-2 fa-trash-o"> </i>
+                        </a>`
+                    }
+                },
+            ],
+            // "createdRow": function (row, data, dataIndex) {
+            //     // if (data[4] == "A") {
+            //     //     $(row).addClass('important');
+            //     // }
+            //     console.log("行被创建了：", row, data, dataIndex);
+            // },
+            "initComplete": function (settings, json) {
+                // $('div.loading').remove();
+                console.log('初始化结束');
+            }
+        });
     }
 </script>
 {{ end }}

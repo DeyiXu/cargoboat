@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/cargoboat/cargoboat/controller/api"
+	"github.com/cargoboat/cargoboat/controller/web"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 )
@@ -16,15 +18,14 @@ var (
 
 // Start 启动
 func Startup() {
-	rest := gin.Default()
-	setRouter(rest.Group("/demo"))
-	setWeb(rest)
-	setWebRouter(rest)
-	setAPIRouter(rest.Group("/api"))
-
+	engine := gin.Default()
+	setRouter(engine.Group("/demo"))
+	setWeb(engine)
+	setWebRouter(engine, web.Router()...)
+	setAPIRouter(engine.Group("/api"), api.Router()...)
 	httpServer = &http.Server{
 		Addr:    viper.GetString("system.addr"),
-		Handler: rest,
+		Handler: engine,
 	}
 
 	go func() {

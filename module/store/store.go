@@ -1,52 +1,35 @@
 package store
 
 import (
-	"log"
-	"os"
+	"github.com/nilorg/pkg/db"
 
 	"github.com/bwmarrin/snowflake"
-	"github.com/jinzhu/gorm"
 	"github.com/nilorg/pkg/logger"
 
 	// postgres驱动
 	_ "github.com/jinzhu/gorm/dialects/postgres"
-	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 )
 
 var (
-	// DB 数据库连接
-	DB *gorm.DB
+	// DataBase 数据库
+	DataBase *db.DataBase
 	// SnowflakeNode 雪花ID节点
 	snowflakeNode *snowflake.Node
 )
 
 func initDB() {
-	// 初始化数据库
-	db, err := gorm.Open("postgres", viper.GetString("postgres.address"))
-	if err != nil {
-		logger.Fatalf(
-			"初始化 postgres 连接失败: %s \n",
-			errors.Wrap(err, "打开 postgres 连接失败"),
-		)
-		os.Exit(-1)
+	dbConf := db.DataBaseConfig{
+		DBType:        "postgres",
+		MasterAddress: viper.GetString("postgres.address"),
+		LogFlag:       viper.GetBool("postgres.log"),
+		MaxOpen:       viper.GetInt("postgres.max_open"),
+		MaxIdle:       viper.GetInt("postgres.max_idle"),
+		SlaveAddress: []string{
+			viper.GetString("postgres.address"),
+		},
 	}
-	err = db.DB().Ping()
-	if err != nil {
-		logger.Fatalf(
-			"初始化 postgres 连接失败: %s \n",
-			errors.Wrap(err, "Ping postgres 失败"),
-		)
-		os.Exit(-1)
-	}
-
-	db.LogMode(viper.GetBool("postgres.log"))
-
-	db.DB().SetMaxOpenConns(viper.GetInt("postgres.max_open"))
-	db.DB().SetMaxIdleConns(viper.GetInt("postgres.max_idle"))
-	// db.DB().SetConnMaxLifetime(time.Hour)
-
-	DB = db
+	DataBase = db.NewDataBase(dbConf)
 }
 
 func initID() {
@@ -66,18 +49,7 @@ func Start() {
 
 // Close 关闭
 func Close() {
-	err := DB.Close()
-	if err != nil {
-		log.Println(err)
-	}
-}
-
-// SwitchDB 切换数据库
-func SwitchDB(tran *gorm.DB) *gorm.DB {
-	if tran != nil {
-		return tran
-	}
-	return DB
+	DataBase.Close()
 }
 
 // NewSnowflakeID 获取雪花ID

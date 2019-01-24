@@ -3,12 +3,11 @@ package server
 import (
 	"time"
 
+	"github.com/nilorg/pkg/gin/route"
+
 	"github.com/appleboy/gin-jwt"
-	"github.com/cargoboat/cargoboat/controller/application"
 	"github.com/cargoboat/cargoboat/controller/auth"
-	"github.com/cargoboat/cargoboat/controller/config"
 	"github.com/gin-gonic/gin"
-	ngin "github.com/nilorg/pkg/gin"
 )
 
 var (
@@ -42,15 +41,35 @@ func setRouter(handler *gin.RouterGroup) {
 		// auth.GET("/hello", helloHandler)
 		auth.GET("/refresh_token", authMiddleware.RefreshHandler)
 
-		auth.GET("/applications", ngin.WebAPIControllerFunc(application.Get))
-		auth.GET("/applications/:id", ngin.WebAPIControllerFunc(application.GetOne))
-		auth.GET("/applications/:id/configs", ngin.WebAPIControllerFunc(application.GetConfigs))
-		auth.POST("/applications", ngin.WebAPIControllerFunc(application.Post))
-		auth.DELETE("/applications/:id", ngin.WebAPIControllerFunc(application.Delete))
+	}
+}
 
-		auth.GET("/configs", ngin.WebAPIControllerFunc(config.Get))
-		auth.POST("/configs", ngin.WebAPIControllerFunc(config.Post))
-		auth.PUT("/configs/:id", ngin.WebAPIControllerFunc(config.Put))
-		auth.DELETE("/configs/:id", ngin.WebAPIControllerFunc(config.Delete))
+// setAPIRouter 设置路由
+func setAPIRouter(api *gin.RouterGroup, controllers ...route.Router) {
+	apiAuthRouter := api.Group("/")
+	apiAuthRouter.Use(AuthRequired)
+	for _, controller := range controllers {
+		for _, route := range controller.Route() {
+			if route.Auth {
+				apiAuthRouter.Handle(route.Method, route.RelativePath, route.HandlerFunc)
+			} else {
+				api.Handle(route.Method, route.RelativePath, route.HandlerFunc)
+			}
+		}
+	}
+}
+
+// setAPIRouter 设置路由
+func setWebRouter(web *gin.Engine, controllers ...route.Router) {
+	webAuthRouter := web.Group("/")
+	webAuthRouter.Use(AuthRequired)
+	for _, controller := range controllers {
+		for _, route := range controller.Route() {
+			if route.Auth {
+				webAuthRouter.Handle(route.Method, route.RelativePath, route.HandlerFunc)
+			} else {
+				web.Handle(route.Method, route.RelativePath, route.HandlerFunc)
+			}
+		}
 	}
 }

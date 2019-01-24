@@ -15,10 +15,7 @@ import (
 
 	"github.com/nilorg/pkg/logger"
 
-	applicationWebController "github.com/cargoboat/cargoboat/controller/web/application"
-	authWebController "github.com/cargoboat/cargoboat/controller/web/auth"
-	errorWebController "github.com/cargoboat/cargoboat/controller/web/error"
-	homeWebController "github.com/cargoboat/cargoboat/controller/web/home"
+	WebController "github.com/cargoboat/cargoboat/controller/web"
 
 	"github.com/gin-gonic/gin"
 	ngin "github.com/nilorg/pkg/gin"
@@ -88,15 +85,15 @@ func loadTemplates(templatesDir string) multitemplate.Render {
 
 func loadFuncMap() template.FuncMap {
 	return template.FuncMap{
-		"getMenuData":       authWebController.GetMenuData,
-		"getNavigationData": authWebController.GetNavigationData,
-		"getWebInfo":        homeWebController.GetWebInfo,
+		"getMenuData":       WebController.Auth.GetMenuData,
+		"getNavigationData": WebController.Auth.GetNavigationData,
+		"getWebInfo":        WebController.Home.GetWebInfo,
 	}
 }
 
 func setWeb(engine *gin.Engine) {
 	// 404 page
-	engine.NoRoute(ngin.WebControllerFunc(errorWebController.Error404, "errors"))
+	engine.NoRoute(ngin.WebControllerFunc(WebController.Error.Error404, "errors"))
 
 	engine.HTMLRender = loadTemplates(viper.GetString("web.conf.templates_dir"))
 	// session
@@ -107,20 +104,4 @@ func setWeb(engine *gin.Engine) {
 	engine.Use(gzip.Gzip(gzip.DefaultCompression))
 	// file server
 	engine.Static("/assets", viper.GetString("web.conf.assets_dir"))
-}
-
-func setWebRouter(router *gin.Engine) {
-	// auth
-	authRouter := router.Group("/")
-	authRouter.Use(AuthRequired)
-	{
-		authRouter.GET("/", ngin.WebControllerFunc(homeWebController.Index, "index"))
-		authRouter.GET("/index.html", ngin.WebControllerFunc(homeWebController.Index, "index"))
-
-		authRouter.GET("/application/list", ngin.WebControllerFunc(applicationWebController.List, "applicationList"))
-
-		authRouter.GET("/logout.html", ngin.WebAPIControllerFunc(authWebController.Logout))
-	}
-
-	router.GET("/login.html", ngin.WebControllerFunc(authWebController.GetLogin, "login"))
 }

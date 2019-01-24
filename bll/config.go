@@ -1,25 +1,35 @@
-package config
+package bll
 
 import (
 	"time"
 
-	dalConfig "github.com/cargoboat/cargoboat/dal/config"
+	"github.com/cargoboat/cargoboat/dal"
 	"github.com/cargoboat/cargoboat/model"
 	cerrors "github.com/cargoboat/cargoboat/module/errors"
 	"github.com/cargoboat/cargoboat/module/store"
 	"github.com/cargoboat/cargoboat/service"
 )
 
-// Edit 编辑配置
-func Edit(appID int64, name, mode, value string) error {
-	conf := dalConfig.GetByLastVersion(name, mode, appID)
-	if conf == nil {
-		return add(appID, name, mode, value)
-	}
-	return update(*conf, value)
+type ConfigBll struct {
+	errFormat string
 }
 
-func add(appID int64, name, mode, value string) error {
+func NewConfigBll() *ConfigBll {
+	return &ConfigBll{
+		errFormat: "bll/config/%s:%v",
+	}
+}
+
+// Edit 编辑配置
+func (c *ConfigBll) Edit(appID int64, name, mode, value string) error {
+	conf := dal.Config.GetByLastVersion(name, mode, appID)
+	if conf == nil {
+		return c.add(appID, name, mode, value)
+	}
+	return c.update(*conf, value)
+}
+
+func (c *ConfigBll) add(appID int64, name, mode, value string) error {
 	conf := new(model.Config)
 	conf.ID = store.NewSnowflakeID().Int64()
 	conf.AppID = appID
@@ -27,7 +37,7 @@ func add(appID int64, name, mode, value string) error {
 	conf.Name = name
 	conf.Value = value
 	conf.Version = 1
-	if err := dalConfig.Insert(nil, conf); err != nil {
+	if err := dal.Config.Add(conf); err != nil {
 		// 添加配置名称错误
 		return cerrors.GetBusinessError(2006)
 	}
@@ -36,14 +46,14 @@ func add(appID int64, name, mode, value string) error {
 	return nil
 }
 
-func update(srcConf model.Config, value string) error {
+func (c *ConfigBll) update(srcConf model.Config, value string) error {
 	srcConf.CreatedAt = time.Now()
 	srcConf.UpdatedAt = srcConf.CreatedAt
 	srcConf.DeletedAt = nil
 	srcConf.ID = store.NewSnowflakeID().Int64()
 	srcConf.Value = value
 	srcConf.Version++
-	if err := dalConfig.Insert(nil, &srcConf); err != nil {
+	if err := dal.Config.Add(&srcConf); err != nil {
 		// 添加配置名称错误
 		return cerrors.GetBusinessError(2006)
 	}

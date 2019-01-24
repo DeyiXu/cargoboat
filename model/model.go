@@ -16,7 +16,7 @@ type BaseModel struct {
 
 // AutoMigrate 自动迁移
 func AutoMigrate() {
-	store.DB.AutoMigrate(
+	store.DataBase.Master().AutoMigrate(
 		&Application{},
 		&Config{},
 	)
