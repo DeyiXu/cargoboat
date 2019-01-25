@@ -55,6 +55,36 @@ func (a *ApplicationBll) Add(name string) (appID int64, err error) {
 		return
 	}
 	appID = app.ID
+
+	developMode := &model.Mode{
+		AppID: app.ID,
+		Name:  "develop",
+	}
+	masterMode := &model.Mode{
+		AppID: app.ID,
+		Name:  "master",
+	}
+	err = dal.Mode.Add(developMode)
+	if err != nil {
+		// 添加应用程序模式错误
+		err = cerrors.GetBusinessError(2008)
+		return
+	}
+	err = dal.Mode.Add(masterMode)
+	if err != nil {
+		// 添加应用程序模式错误
+		err = cerrors.GetBusinessError(2008)
+		return
+	}
+	defaultVersion := &model.Version{
+		Name: "v1.0",
+	}
+	err = dal.Version.Add(defaultVersion)
+	if err != nil {
+		// 添加应用程序版本错误
+		err = cerrors.GetBusinessError(2009)
+		return
+	}
 	return
 }
 
@@ -90,5 +120,36 @@ func (a *ApplicationBll) QueryPage(pageNum, pageSize int, appName string) (data 
 		})
 	}
 
+	return
+}
+
+// // AddMode 添加模式
+func (a *ApplicationBll) AddMode(appID int64, modeName string) (modeID int64, err error) {
+	var exist bool
+	exist, err = dal.Mode.IsExistName(modeName, appID)
+	if err != nil {
+		err = cerrors.GetBusinessError(2008)
+		return
+	}
+	if exist {
+		err = cerrors.GetBusinessError(2010)
+		return
+	}
+
+	mode := &model.Mode{
+		Name:  modeName,
+		AppID: appID,
+	}
+	err = dal.Mode.Add(mode)
+	if err != nil {
+		err = cerrors.GetBusinessError(2008)
+		return
+	}
+	return
+}
+
+// GetModeAll ...
+func (a *ApplicationBll) GetModeAll(appID int64) (modes []*model.Mode) {
+	modes = dal.Mode.GetAllByAppID(appID)
 	return
 }

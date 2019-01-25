@@ -39,7 +39,7 @@ func (a *ApplicationDal) QueryPage(pageNum, pageSize int, appName string) (data 
 
 // GetAll ...
 func (a *ApplicationDal) GetAll() (apps []*model.Application) {
-	if a.db.Slave().Find(apps).RecordNotFound() {
+	if a.db.Slave().Find(&apps).RecordNotFound() {
 		return nil
 	}
 	return
@@ -65,7 +65,8 @@ func (a *ApplicationDal) Update(app *model.Application) (err error) {
 
 // GetByID return Application by ID
 func (a *ApplicationDal) GetByID(id int64) (app *model.Application) {
-	err := a.db.Slave().First(&app, "id = ?", id).Error
+	app = new(model.Application)
+	err := a.db.Slave().First(app, id).Error
 	if err == gorm.ErrRecordNotFound {
 		return nil
 	} else if err != nil {
@@ -76,13 +77,13 @@ func (a *ApplicationDal) GetByID(id int64) (app *model.Application) {
 }
 
 // IsExistName 判断是否存在
-func (a *ApplicationDal) IsExistName(name string) (b bool, err error) {
+func (a *ApplicationDal) IsExistName(name string) (exist bool, err error) {
 	var count int
 	err = a.db.Slave().Model(&model.Application{}).Where("name = ?", name).Count(&count).Error
 	if err != nil {
 		logger.Errorf(a.errFormat, "IsExistName", err)
 		return
 	}
-	b = count > 0
+	exist = count > 0
 	return
 }

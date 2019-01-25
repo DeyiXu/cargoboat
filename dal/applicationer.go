@@ -15,5 +15,5 @@ type Applicationer interface {
 	// GetByID return Application by ID
 	GetByID(id int64) (app *model.Application)
 	// IsExistName ...
-	IsExistName(name string) (b bool, err error)
+	IsExistName(name string) (exist bool, err error)
 }

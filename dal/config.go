@@ -32,7 +32,7 @@ func (c *ConfigDal) Add(conf *model.Config) (err error) {
 
 // Update ...
 func (c *ConfigDal) Update(e *model.Config) (err error) {
-	err = c.db.Master().Model(&e).Updates(&e).Error
+	err = c.db.Master().Model(&model.Config{}).Updates(&e).Error
 	if err != nil {
 		logger.Errorf(c.errFormat, "Update", err)
 	}
@@ -41,7 +41,8 @@ func (c *ConfigDal) Update(e *model.Config) (err error) {
 
 // GetByID return user by ID
 func (c *ConfigDal) GetByID(id int64) (conf *model.Config) {
-	err := c.db.Slave().First(&conf, "id = ?", id).Error
+	conf = new(model.Config)
+	err := c.db.Slave().First(conf, id).Error
 	if err == gorm.ErrRecordNotFound {
 		conf = nil
 	} else if err != nil {
@@ -52,14 +53,14 @@ func (c *ConfigDal) GetByID(id int64) (conf *model.Config) {
 }
 
 // IsExistName 判断是否存在
-func (c *ConfigDal) IsExistName(name, mode string, appID int64) (b bool, err error) {
+func (c *ConfigDal) IsExistName(name, mode string, appID int64) (exist bool, err error) {
 	var count int
 	err = c.db.Slave().Model(&model.Config{}).Where("name = ? and mode = ? and app_id = ?", name, mode, appID).Count(&count).Error
 	if err != nil {
 		logger.Errorf(c.errFormat, "IsExistName", err)
 		return
 	}
-	b = count > 0
+	exist = count > 0
 	return
 }
 

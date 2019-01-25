@@ -24,7 +24,7 @@
                     "mRender": function (data, type, full) {
                         console.log(data, type, full);
                         return `<a href="javascript:void(0)" data-app-id="${full.id}"><i class="fa fa-edit"></i></a>
-<a href="javascript:void(0)" data-app-id="${full.id}"><i class="fa fa-bolt"></i></a>
+<a href="/application/mode/list?app_id=${full.id}" data-app-id="${full.id}"><i class="fa fa-bolt"></i></a>
 <a href="javascript:void(0)" data-app-id="${full.id}"><i class="fa fa-tags"></i></a>
 <a href="javascript:void(0)" data-app-id="${full.id}"><i class="fa fa-trash-o"> </i></a>`
                     }

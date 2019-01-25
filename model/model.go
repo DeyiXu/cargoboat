@@ -19,5 +19,7 @@ func AutoMigrate() {
 	store.DataBase.Master().AutoMigrate(
 		&Application{},
 		&Config{},
+		&Mode{},
+		&Version{},
 	)
 }
