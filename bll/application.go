@@ -153,3 +153,8 @@ func (a *ApplicationBll) GetModeAll(appID int64) (modes []*model.Mode) {
 	modes = dal.Mode.GetAllByAppID(appID)
 	return
 }
+
+// UpdateName 修改名称
+func (a *ApplicationBll) UpdateName(appID int64, name string) (err error) {
+	return nil
+}

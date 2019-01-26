@@ -2,7 +2,19 @@
 <script type="text/javascript">
     window.PageComplete = function () {
         console.info("PageComplete index....");
-        $('#applicationTable').DataTable({
+        var $ModalAppupdate = $('#modal-appupdate');
+        $('#applicationTable')
+            .on( 'init.dt', function () {
+                $('.appupdate').on('click',function () {
+                    var appID = $(this).attr('data-app-id');
+                    $.getJSON('/api/application/one',{id:appID},function (data) {
+                        $ModalAppupdate.find('[name="id"]').val(data.id);
+                        $ModalAppupdate.find('[name="name"]').val(data.name);
+                        $ModalAppupdate.modal('show');
+                    });
+                });
+            } )
+            .DataTable({
             'serverSide': true,
             'paging': true,
             'lengthChange': false,
@@ -23,7 +35,7 @@
                     "aTargets": [5],
                     "mRender": function (data, type, full) {
                         console.log(data, type, full);
-                        return `<a href="javascript:void(0)" data-app-id="${full.id}"><i class="fa fa-edit"></i></a>
+                        return `<a href="javascript:void(0)" class="appupdate" data-app-id="${full.id}"><i class="fa fa-edit"></i></a>
 <a href="/application/mode/list?app_id=${full.id}" data-app-id="${full.id}"><i class="fa fa-bolt"></i></a>
 <a href="javascript:void(0)" data-app-id="${full.id}"><i class="fa fa-tags"></i></a>
 <a href="javascript:void(0)" data-app-id="${full.id}"><i class="fa fa-trash-o"> </i></a>`
@@ -39,6 +51,7 @@
             "initComplete": function (settings, json) {
                 // $('div.loading').remove();
                 console.log('初始化结束');
+
             }
         });
     }

@@ -3,6 +3,8 @@ package api
 import (
 	"net/http"
 
+	"github.com/nilorg/sdk/convert"
+
 	"github.com/gin-gonic/gin"
 
 	"github.com/cargoboat/cargoboat/bll"
@@ -38,6 +40,13 @@ func (app *ApplicationController) Route() []route.Route {
 			RelativePath: "/application/mode/add",
 			Auth:         true,
 			HandlerFunc:  ngin.WebAPIControllerFunc(app.AddMode),
+		},
+		{
+			Name:         "查询单个应用程序",
+			Method:       http.MethodGet,
+			RelativePath: "/application/one",
+			Auth:         true,
+			HandlerFunc:  ngin.WebAPIControllerFunc(app.GetModeOne),
 		},
 	}
 }
@@ -84,4 +93,22 @@ func (*ApplicationController) AddMode(ctx *ngin.WebAPIContext) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"mode_id": modeID,
 	})
+}
+
+// AddMode 添加模式
+func (*ApplicationController) GetModeOne(ctx *ngin.WebAPIContext) {
+	appID := convert.ToInt64(ctx.Query("id"))
+	app := bll.Application.GetOneByID(appID)
+	ctx.JSON(http.StatusOK, app)
+}
+
+// updateAppModel 修改APP
+type updateAppModel struct {
+	ID   int64  `json:"id"`
+	Name string `json:"name"`
+}
+
+// UpdateApp 修改
+func (*ApplicationController) UpdateApp(ctx *ngin.WebAPIContext) {
+
 }
