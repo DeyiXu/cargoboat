@@ -73,23 +73,12 @@ func (c *Cargoboat) initConfig() (err error) {
 }
 
 func (c *Cargoboat) initRedis() (err error) {
-	// 获取group set集合数量
-	icmd := c.redisClient.SCard(RedisKeyGroupList)
-	listLen := icmd.Val()
-	if listLen > 0 {
-		// 查找group set集合中的group key
-		scmd := c.redisClient.SScan(RedisKeyGroupList, 0, "", listLen)
-		resultArray, _ := scmd.Val()
-		// 删除已有配置信息
-		for _, key := range resultArray {
-			c.redisClient.Del(fmt.Sprintf(RedisKeyGroupFormat, key))
-		}
-		// 删除 group list
-		c.redisClient.Del(RedisKeyGroupList)
-	}
+	keysCmd := c.redisClient.Keys("cargoboat.*")
+	keys := keysCmd.Val()
+	c.redisClient.Del(keys...)
 
 	for groupKey, groupValue := range c.config {
-		addGroupResult := c.redisClient.SAdd(RedisKeyGroupList, groupKey)
+		addGroupResult := c.redisClient.SAdd(RedisKeyGroupList, fmt.Sprintf(RedisKeyGroupFormat, groupKey))
 		if addGroupResult.Err() != nil {
 			err = addGroupResult.Err()
 			return
@@ -184,11 +173,13 @@ func (c *Cargoboat) removeViper(groupName string) {
 func (c *Cargoboat) onGroupChange(groupName string) {
 	v := c.Viper(groupName)
 	groupValueKeys := v.AllKeys()
-	c.redisClient.HDel(RedisKeyGroupFormat)
+	c.redisClient.HDel(fmt.Sprintf(RedisKeyGroupFormat, groupName))
 	for i := 0; i < len(groupValueKeys); i++ {
 		confKey := groupValueKeys[i]
 		c.redisClient.HSet(fmt.Sprintf(RedisKeyGroupFormat, groupName), confKey, v.Get(confKey))
 	}
+	// 发布更改消息
+	c.redisClient.Publish(RedisKeyChangeChannel, groupName)
 }
 func (c *Cargoboat) onGroupDelete(groupName string) {
 	// 删除 group set集合
@@ -197,4 +188,6 @@ func (c *Cargoboat) onGroupDelete(groupName string) {
 		c.redisClient.SAdd(RedisKeyGroupList, gkey)
 	}
 	c.redisClient.Del(fmt.Sprintf(RedisKeyGroupFormat, groupName))
+	// 发布删除消息
+	c.redisClient.Publish(RedisKeyDeleteChannel, groupName)
 }
