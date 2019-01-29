@@ -1,12 +1,17 @@
 [system]
 addr = "0.0.0.0:5000"
 mode = "debug"
-config_dir = "../configs/"
 username = "cargoboat"
 password = "cargoboat"
-
 [mysql]
 address = "root:123456@tcp(127.0.0.1:3306)/cargoboat?charset=utf8mb4&parseTime=True"
 log = true
 max_open = 100
 max_idle = 10
+aaa = 9999
+bbb = 100
+ccc = 3333
+ccd = 1111
+ddd = 111
+eee = 200
+fff = 10011
